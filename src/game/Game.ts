@@ -88,7 +88,7 @@ export class Game {
             this.context!.stroke();
             this.context!.closePath();
 
-            if(this._firstFrame) console.log(projectedTriangle);
+            if (this._firstFrame) console.log(projectedTriangle);
         }
     }
 }
