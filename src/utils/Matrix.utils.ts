@@ -73,4 +73,17 @@ export class MatrixUtils {
 
         return rotMat;
     }
+
+    public static rotationZMatrix(angle: number): Matrix4x4 {
+
+        const rotMat = MatrixUtils.newMatrix4x4();
+        rotMat[0][0] = Math.cos(angle);
+        rotMat[0][1] = Math.sin(angle);
+        rotMat[1][0] = -Math.sin(angle);
+        rotMat[1][1] = Math.cos(angle);
+        rotMat[2][2] = 1;
+        rotMat[3][3] = 1;
+
+        return rotMat;
+    }
 }

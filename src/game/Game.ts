@@ -71,7 +71,10 @@ export class Game {
         for (let triangle of mesh.triangles) {
 
             const rotXMatrix = MatrixUtils.rotationXMatrix(mesh.roation.x);
-            const rotatedTriangle = MatrixUtils.multiplyTriangle(triangle, rotXMatrix);
+            const rotZMatrix = MatrixUtils.rotationZMatrix(mesh.roation.z);
+            
+            const rotatedZTriangle = MatrixUtils.multiplyTriangle(triangle, rotZMatrix);
+            const rotatedTriangle = MatrixUtils.multiplyTriangle(rotatedZTriangle, rotXMatrix);
 
             // Translate
             for(let point of rotatedTriangle.points) {
