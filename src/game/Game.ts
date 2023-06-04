@@ -68,12 +68,13 @@ export class Game {
 
     private drawMesh(mesh: Mesh): void {
 
-        for (let tri of mesh.triangles) {
+        for (let triangle of mesh.triangles) {
 
-            const triangle = tri.clone();
+            const rotXMatrix = MatrixUtils.rotationXMatrix(mesh.roation.x);
+            const rotatedTriangle = MatrixUtils.multiplyTriangle(triangle, rotXMatrix);
 
             // Translate
-            for(let point of triangle.points) {
+            for(let point of rotatedTriangle.points) {
 
                 point.x += mesh.translation.x;
                 point.y += mesh.translation.y;
@@ -81,7 +82,7 @@ export class Game {
             }
 
             // Convert 3D to 2D
-            const projectedTriangle = MatrixUtils.multiplyTriangle(triangle, this.projectionMatrix);
+            const projectedTriangle = MatrixUtils.multiplyTriangle(rotatedTriangle, this.projectionMatrix);
 
             // Scale to screen size
             for (let point of projectedTriangle.points) {

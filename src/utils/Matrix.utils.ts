@@ -60,4 +60,17 @@ export class MatrixUtils {
             tri.color
         );
     }
+
+    public static rotationXMatrix(angle: number): Matrix4x4 {
+
+        const rotMat = MatrixUtils.newMatrix4x4();
+        rotMat[0][0] = 1;
+        rotMat[1][1] = Math.cos(angle * 0.5);
+        rotMat[1][2] = Math.sin(angle * 0.5);
+        rotMat[2][1] = -Math.sin(angle * 0.5);
+        rotMat[2][2] = Math.cos(angle * 0.5);
+        rotMat[3][3] = 1;
+
+        return rotMat;
+    }
 }
