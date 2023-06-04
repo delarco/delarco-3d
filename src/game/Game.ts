@@ -3,6 +3,7 @@ import { Matrix4x4 } from "../core/Matrix4x4";
 import { Mesh } from "../core/Mesh";
 import { Scene } from "../scene/Scene";
 import { CanvasUtils } from "../utils/Canvas.utils";
+import { Clock } from "../utils/Clock";
 import { MatrixUtils } from "../utils/Matrix.utils";
 import { GameConfig } from "./GameConfig";
 
@@ -11,6 +12,7 @@ export class Game {
     private config: GameConfig;
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D | null;
+    private clock = new Clock();
 
     public get domElement() { return this.canvas; }
 
@@ -55,6 +57,9 @@ export class Game {
             const currentTimeInSecs = currentTime * 0.001;
             const deltaTime = currentTimeInSecs - this.previousTime;
             this.previousTime = currentTimeInSecs;
+
+            this.clock.tick();
+            this.clock.setFpsToTitle();
 
             CanvasUtils.clear(this.context!, this.backgroundColor);
             this.scene.update(currentTime, deltaTime);
