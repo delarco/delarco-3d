@@ -4,7 +4,7 @@ import { Vec3D } from "../core/Vect3D";
 
 export class CubeGeometry extends Mesh {
 
-    constructor(size: number) {
+    constructor(size: number = 1) {
         super();
 
         this.triangles = [
