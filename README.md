@@ -2,9 +2,15 @@
 
 ## What we have so far
 
-![Space Invaders](public/screenshots/ss01.png)
+Update #2
 
-(yeah, a black screen...)
+![A strange cube](public/screenshots/ss02.png)
+
+Update #1
+
+![Black screen](public/screenshots/ss01.png)
+
+
 
 ## Resources
 * Code-It-Yourself! 3D Graphics Engine from [javidx9](https://www.youtube.com/@javidx9)
