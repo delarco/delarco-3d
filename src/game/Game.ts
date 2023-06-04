@@ -53,9 +53,9 @@ export class Game {
         this.projectionMatrix = MatrixUtils.createProjectionMatrix(config.camera);
     }
 
-    public run(): void {
+    public async run(): Promise<void> {
 
-        this.scene.preload();
+        await this.scene.preload();
         this.scene.initialize();
 
         const mainLoop = (currentTime: number): void => {
@@ -138,7 +138,7 @@ export class Game {
 
                 // Draw triangle
                 CanvasUtils.drawTriangle(this.context!, projectedTriangle);
-                CanvasUtils.drawTriangleLines(this.context!, projectedTriangle, Color.BLACK);
+                //CanvasUtils.drawTriangleLines(this.context!, projectedTriangle, Color.BLACK);
 
                 if (this._firstFrame) console.log(projectedTriangle);
             }
