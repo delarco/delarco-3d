@@ -20,6 +20,8 @@ export class Game {
 
     private backgroundColor = new Color(204, 204, 204);
 
+    private previousTime = 0;
+
     private _firstFrame = true;
 
     constructor(config: GameConfig = new GameConfig()) {
@@ -48,22 +50,26 @@ export class Game {
         this.scene.preload();
         this.scene.initialize();
 
-        requestAnimationFrame(() => this.update());
-    }
+        const mainLoop = (currentTime: number): void => {
 
-    private update(): void {
+            const currentTimeInSecs = currentTime * 0.001;
+            const deltaTime = currentTimeInSecs - this.previousTime;
+            this.previousTime = currentTimeInSecs;
 
-        CanvasUtils.clear(this.context!, this.backgroundColor);
-        this.scene.update(0, 0);
+            CanvasUtils.clear(this.context!, this.backgroundColor);
+            this.scene.update(currentTime, deltaTime);
+    
+            for (let mesh of this.scene.meshes) {
+    
+                this.drawMesh(mesh);
+            }
+    
+            this._firstFrame = false;
+    
+            requestAnimationFrame(mainLoop);
+        };
 
-        for (let mesh of this.scene.meshes) {
-
-            this.drawMesh(mesh);
-        }
-
-        this._firstFrame = false;
-
-        requestAnimationFrame(() => this.update());
+        requestAnimationFrame(mainLoop);
     }
 
     private drawMesh(mesh: Mesh): void {
