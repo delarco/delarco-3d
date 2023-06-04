@@ -1,6 +1,7 @@
 import { Matrix4x4 } from "../core/Matrix4x4";
 import { Mesh } from "../core/Mesh";
 import { Scene } from "../scene/Scene";
+import { CanvasUtils } from "../utils/Canvas.utils";
 import { MatrixUtils } from "../utils/Matrix.utils";
 import { GameConfig } from "./GameConfig";
 
@@ -34,8 +35,7 @@ export class Game {
             throw new Error("Can't get context");
         }
 
-        this.context.fillStyle = '#000';
-        this.context.fillRect(0, 0, config.resolution.width, config.resolution.height);
+        CanvasUtils.clear(this.context!, '#CCC');
 
         this.projectionMatrix = MatrixUtils.createProjectionMatrix(config.camera);
     }
@@ -79,14 +79,7 @@ export class Game {
             }
 
             // Draw triangle
-            this.context!.strokeStyle = '#F00';
-            this.context!.beginPath();
-            this.context!.moveTo(projectedTriangle.p1.x, projectedTriangle.p1.y);
-            this.context!.lineTo(projectedTriangle.p2.x, projectedTriangle.p2.y);
-            this.context!.lineTo(projectedTriangle.p3.x, projectedTriangle.p3.y);
-            this.context!.lineTo(projectedTriangle.p1.x, projectedTriangle.p1.y);
-            this.context!.stroke();
-            this.context!.closePath();
+            CanvasUtils.drawTriangleLines(this.context!, projectedTriangle);
 
             if (this._firstFrame) console.log(projectedTriangle);
         }
