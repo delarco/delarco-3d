@@ -22,8 +22,20 @@ export class Color {
         return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
     }
 
+    public shade(shade: number = 0.6): void {
+
+        this.r *= shade;
+        this.g *= shade;
+        this.b *= shade;
+    }
+
     public static shade(color: Color, shade: number = 0.6): Color {
 
         return new Color(color.r * shade, color.g * shade, color.b * shade,);
+    }
+
+    public clone(): Color {
+
+        return new Color(this.r, this.g, this.b, this.a);
     }
 }
