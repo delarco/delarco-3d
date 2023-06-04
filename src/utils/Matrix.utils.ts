@@ -1,5 +1,6 @@
 import { Camera } from "../core/Camera";
 import { Matrix4x4 } from "../core/Matrix4x4";
+import { Triangle } from "../core/Triangle";
 import { Vec3D } from "../core/Vect3D";
 
 export class MatrixUtils {
@@ -38,7 +39,7 @@ export class MatrixUtils {
 
         const w = v.x * m[0][3] + v.y * m[1][3] + v.z * m[2][3] + m[3][3];
 
-        if(w != 0) {
+        if (w != 0) {
 
             retVec.x = retVec.x / w;
             retVec.y = retVec.y / w;
@@ -46,5 +47,17 @@ export class MatrixUtils {
         }
 
         return retVec;
+    }
+
+    public static multiplyTriangle(tri: Triangle, m: Matrix4x4): Triangle {
+
+        return new Triangle(
+            [
+                MatrixUtils.multiplyVector(tri.p1, m),
+                MatrixUtils.multiplyVector(tri.p2, m),
+                MatrixUtils.multiplyVector(tri.p3, m),
+            ],
+            tri.color
+        );
     }
 }
