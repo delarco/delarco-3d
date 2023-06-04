@@ -1,3 +1,4 @@
+import { Color } from "./Color";
 import { Vec3D } from "./Vect3D";
 
 export class Triangle {
@@ -10,6 +11,6 @@ export class Triangle {
         public points: Array<Vec3D> = new Array<Vec3D>(
             new Vec3D(), new Vec3D(), new Vec3D()
         ),
-        public color: string = '#F00',
+        public color: Color = Color.RED,
     ) {}
 }

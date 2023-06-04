@@ -1,3 +1,4 @@
+import { Color } from "../core/Color";
 import { Matrix4x4 } from "../core/Matrix4x4";
 import { Mesh } from "../core/Mesh";
 import { Scene } from "../scene/Scene";
@@ -35,7 +36,7 @@ export class Game {
             throw new Error("Can't get context");
         }
 
-        CanvasUtils.clear(this.context!, '#CCC');
+        CanvasUtils.clear(this.context!, new Color(204, 204, 204));
 
         this.projectionMatrix = MatrixUtils.createProjectionMatrix(config.camera);
     }

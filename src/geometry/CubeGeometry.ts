@@ -1,10 +1,11 @@
+import { Color } from "../core/Color";
 import { Mesh } from "../core/Mesh";
 import { Triangle } from "../core/Triangle";
 import { Vec3D } from "../core/Vect3D";
 
 export class CubeGeometry extends Mesh {
 
-    constructor(size: number = 1) {
+    constructor(size: number = 1, color: Color = Color.RED) {
         super();
 
         this.triangles = [
@@ -81,5 +82,7 @@ export class CubeGeometry extends Mesh {
                 new Vec3D(size, 0, 0)
             ]),
         ];
+
+        for(let tri of this.triangles) tri.color = color;
     }
 }
