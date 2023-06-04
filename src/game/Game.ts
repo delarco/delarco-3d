@@ -1,10 +1,14 @@
+import { Camera } from "../core/Camera";
 import { Color } from "../core/Color";
 import { Matrix4x4 } from "../core/Matrix4x4";
 import { Mesh } from "../core/Mesh";
+import { Vec3D } from "../core/Vect3D";
 import { Scene } from "../scene/Scene";
 import { CanvasUtils } from "../utils/Canvas.utils";
 import { Clock } from "../utils/Clock";
 import { MatrixUtils } from "../utils/Matrix.utils";
+import { TriangleUtils } from "../utils/Triangle.utils";
+import { VectorUtils } from "../utils/Vector.utils";
 import { GameConfig } from "./GameConfig";
 
 export class Game {
@@ -13,6 +17,7 @@ export class Game {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D | null;
     private clock = new Clock();
+    private camera: Camera;
 
     public get domElement() { return this.canvas; }
 
@@ -29,6 +34,7 @@ export class Game {
     constructor(config: GameConfig = new GameConfig()) {
 
         this.config = config;
+        this.camera = config.camera;
 
         this.canvas = document.createElement("canvas");
         this.canvas.width = config.resolution.width;
@@ -63,14 +69,14 @@ export class Game {
 
             CanvasUtils.clear(this.context!, this.backgroundColor);
             this.scene.update(currentTime, deltaTime);
-    
+
             for (let mesh of this.scene.meshes) {
-    
+
                 this.drawMesh(mesh);
             }
-    
+
             this._firstFrame = false;
-    
+
             requestAnimationFrame(mainLoop);
         };
 
@@ -83,34 +89,47 @@ export class Game {
 
             const rotXMatrix = MatrixUtils.rotationXMatrix(mesh.roation.x);
             const rotZMatrix = MatrixUtils.rotationZMatrix(mesh.roation.z);
-            
+
             const rotatedZTriangle = MatrixUtils.multiplyTriangle(triangle, rotZMatrix);
             const rotatedTriangle = MatrixUtils.multiplyTriangle(rotatedZTriangle, rotXMatrix);
 
             // Translate
-            for(let point of rotatedTriangle.points) {
+            for (let point of rotatedTriangle.points) {
 
                 point.x += mesh.translation.x;
                 point.y += mesh.translation.y;
                 point.z += mesh.translation.z;
             }
 
-            // Convert 3D to 2D
-            const projectedTriangle = MatrixUtils.multiplyTriangle(rotatedTriangle, this.projectionMatrix);
+            // Calculate normal
+            const normal = TriangleUtils.calcNormal(rotatedTriangle);
 
-            // Scale to screen size
-            for (let point of projectedTriangle.points) {
+            const dotProduct = VectorUtils.dotProduct(normal, new Vec3D(
+                rotatedTriangle.p1.x - this.camera.position.x,
+                rotatedTriangle.p1.y - this.camera.position.y,
+                rotatedTriangle.p1.z - this.camera.position.z,
+            ));
 
-                point.x += 1.0;
-                point.y += 1.0;
-                point.x *= 0.5 * this.config.resolution.width;
-                point.y *= 0.5 * this.config.resolution.height;
+            if (dotProduct < 0) {
+
+                // Convert 3D to 2D
+                const projectedTriangle = MatrixUtils.multiplyTriangle(rotatedTriangle, this.projectionMatrix);
+
+                // Scale to screen size
+                for (let point of projectedTriangle.points) {
+
+                    point.x += 1.0;
+                    point.y += 1.0;
+                    point.x *= 0.5 * this.config.resolution.width;
+                    point.y *= 0.5 * this.config.resolution.height;
+                }
+
+                // Draw triangle
+                CanvasUtils.drawTriangle(this.context!, projectedTriangle);
+                CanvasUtils.drawTriangleLines(this.context!, projectedTriangle, Color.BLACK);
+
+                if (this._firstFrame) console.log(projectedTriangle);
             }
-
-            // Draw triangle
-            CanvasUtils.drawTriangleLines(this.context!, projectedTriangle);
-
-            if (this._firstFrame) console.log(projectedTriangle);
         }
     }
 }
