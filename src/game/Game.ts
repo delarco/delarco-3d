@@ -18,6 +18,8 @@ export class Game {
 
     private projectionMatrix: Matrix4x4;
 
+    private backgroundColor = new Color(204, 204, 204);
+
     private _firstFrame = true;
 
     constructor(config: GameConfig = new GameConfig()) {
@@ -36,7 +38,7 @@ export class Game {
             throw new Error("Can't get context");
         }
 
-        CanvasUtils.clear(this.context!, new Color(204, 204, 204));
+        CanvasUtils.clear(this.context!, this.backgroundColor);
 
         this.projectionMatrix = MatrixUtils.createProjectionMatrix(config.camera);
     }
@@ -51,6 +53,7 @@ export class Game {
 
     private update(): void {
 
+        CanvasUtils.clear(this.context!, this.backgroundColor);
         this.scene.update(0, 0);
 
         for (let mesh of this.scene.meshes) {
@@ -65,7 +68,9 @@ export class Game {
 
     private drawMesh(mesh: Mesh): void {
 
-        for (let triangle of mesh.triangles) {
+        for (let tri of mesh.triangles) {
+
+            const triangle = tri.clone();
 
             // Translate
             for(let point of triangle.points) {

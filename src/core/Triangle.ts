@@ -12,5 +12,17 @@ export class Triangle {
             new Vec3D(), new Vec3D(), new Vec3D()
         ),
         public color: Color = Color.RED,
-    ) {}
+    ) { }
+
+    public clone(): Triangle {
+
+        return new Triangle(
+            [
+                new Vec3D(this.p1.x, this.p1.y, this.p1.z),
+                new Vec3D(this.p2.x, this.p2.y, this.p2.z),
+                new Vec3D(this.p3.x, this.p3.y, this.p3.z),
+            ],
+            this.color
+        );
+    }
 }
