@@ -67,6 +67,14 @@ export class Game {
 
         for (let triangle of mesh.triangles) {
 
+            // Translate
+            for(let point of triangle.points) {
+
+                point.x += mesh.translation.x;
+                point.y += mesh.translation.y;
+                point.z += mesh.translation.z;
+            }
+
             // Convert 3D to 2D
             const projectedTriangle = MatrixUtils.multiplyTriangle(triangle, this.projectionMatrix);
 
