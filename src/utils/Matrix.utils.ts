@@ -1,5 +1,6 @@
 import { Camera } from "../core/Camera";
 import { Matrix4x4 } from "../core/Matrix4x4";
+import { Vec3D } from "../core/Vect3D";
 
 export class MatrixUtils {
 
@@ -25,5 +26,25 @@ export class MatrixUtils {
         projectionMat[3][3] = 0.0;
 
         return projectionMat;
+    }
+
+    public static multiplyVector(v: Vec3D, m: Matrix4x4): Vec3D {
+
+        const retVec = new Vec3D(
+            v.x * m[0][0] + v.y * m[1][0] + v.z * m[2][0] + m[3][0],
+            v.x * m[0][1] + v.y * m[1][1] + v.z * m[2][1] + m[3][1],
+            v.x * m[0][2] + v.y * m[1][2] + v.z * m[2][2] + m[3][2]
+        );
+
+        const w = v.x * m[0][3] + v.y * m[1][3] + v.z * m[2][3] + m[3][3];
+
+        if(w != 0) {
+
+            retVec.x = retVec.x / w;
+            retVec.y = retVec.y / w;
+            retVec.z = retVec.z / w;
+        }
+
+        return retVec;
     }
 }
