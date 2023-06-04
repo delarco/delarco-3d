@@ -2,6 +2,7 @@ import { Camera } from "../core/Camera";
 import { Color } from "../core/Color";
 import { Matrix4x4 } from "../core/Matrix4x4";
 import { Mesh } from "../core/Mesh";
+import { Triangle } from "../core/Triangle";
 import { Vec3D } from "../core/Vect3D";
 import { Scene } from "../scene/Scene";
 import { CanvasUtils } from "../utils/Canvas.utils";
@@ -28,6 +29,8 @@ export class Game {
     private backgroundColor = new Color(204, 204, 204);
 
     private previousTime = 0;
+
+    private trianglesToRaster = new Array<Triangle>();
 
     private _firstFrame = true;
 
@@ -68,12 +71,16 @@ export class Game {
             this.clock.setFpsToTitle();
 
             CanvasUtils.clear(this.context!, this.backgroundColor);
+            this.trianglesToRaster = [];
+
             this.scene.update(currentTime, deltaTime);
 
             for (let mesh of this.scene.meshes) {
 
                 this.drawMesh(mesh);
             }
+
+            this.drawTriangles();
 
             this._firstFrame = false;
 
@@ -136,12 +143,23 @@ export class Game {
                     point.y *= 0.5 * this.config.resolution.height;
                 }
 
-                // Draw triangle
-                CanvasUtils.drawTriangle(this.context!, projectedTriangle);
-                //CanvasUtils.drawTriangleLines(this.context!, projectedTriangle, Color.BLACK);
-
-                if (this._firstFrame) console.log(projectedTriangle);
+                this.trianglesToRaster.push(projectedTriangle);
             }
+        }
+    }
+
+    private triangleSortFunction(t1: Triangle, t2: Triangle): number {
+
+        const z1 = (t1.p1.z + t1.p2.z + t1.p3.z) / 3.0;
+        const z2 = (t2.p1.z + t2.p2.z + t2.p3.z) / 3.0;
+        return z2 < z1 ? -1 : z2 > z1 ? 1 : 0;
+    }
+
+    private drawTriangles(): void {
+
+        for(let triangle of this.trianglesToRaster.sort(this.triangleSortFunction)) {
+
+            CanvasUtils.drawTriangle(this.context!, triangle);
         }
     }
 }
