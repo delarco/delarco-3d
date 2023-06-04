@@ -2,6 +2,10 @@
 
 ## What we have so far
 
+Update #3
+
+![A spinning cube](public/screenshots/ss03.png)
+
 Update #2
 
 ![A strange cube](public/screenshots/ss02.png)
