@@ -2,6 +2,10 @@
 
 ## What we have so far
 
+Update #4
+
+![Ambient light](public/screenshots/ss04.png)
+
 Update #3
 
 ![A spinning cube](public/screenshots/ss03.png)
