@@ -1,5 +1,6 @@
 import { Triangle } from "../core/Triangle";
 import { Vec3D } from "../core/Vect3D";
+import { VectorUtils } from "./Vector.utils";
 
 export class TriangleUtils {
 
@@ -36,7 +37,7 @@ export class TriangleUtils {
         );
 
         // Normalise
-        const length = Math.sqrt(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
+        const length = VectorUtils.vectorLength(normal);
         normal.x /= length;
         normal.y /= length;
         normal.z /= length;
