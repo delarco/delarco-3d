@@ -112,6 +112,18 @@ export class Game {
 
             if (dotProduct < 0) {
 
+                // ambient light
+                const length = VectorUtils.vectorLength(this.scene.ambientLight);
+
+                const lightDirection = new Vec3D(
+                    this.scene.ambientLight.x / length,
+                    this.scene.ambientLight.y / length,
+                    this.scene.ambientLight.z / length,
+                );
+
+                const shade = VectorUtils.dotProduct(normal, lightDirection);
+                rotatedTriangle.color.shade(shade);
+
                 // Convert 3D to 2D
                 const projectedTriangle = MatrixUtils.multiplyTriangle(rotatedTriangle, this.projectionMatrix);
 
