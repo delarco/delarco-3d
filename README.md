@@ -2,6 +2,10 @@
 
 ## What we have so far
 
+Update #5
+
+![Lamp obj model](public/screenshots/ss05.png)
+
 Update #4
 
 ![Ambient light](public/screenshots/ss04.png)
