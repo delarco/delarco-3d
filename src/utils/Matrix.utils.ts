@@ -57,7 +57,7 @@ export class MatrixUtils {
                 MatrixUtils.multiplyVector(tri.p2, m),
                 MatrixUtils.multiplyVector(tri.p3, m),
             ],
-            tri.color
+            tri.color.clone()
         );
     }
 
