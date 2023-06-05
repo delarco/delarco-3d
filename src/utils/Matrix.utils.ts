@@ -112,4 +112,18 @@ export class MatrixUtils {
 
         return rotMat;
     }
+
+    public static translationMatrix(t: Vec3D): Matrix4x4 {
+		
+        const matrix = MatrixUtils.newMatrix4x4();
+		matrix[0][0] = 1.0;
+		matrix[1][1] = 1.0;
+		matrix[2][2] = 1.0;
+		matrix[3][3] = 1.0;
+		matrix[3][0] = t.x;
+		matrix[3][1] = t.y;
+		matrix[3][2] = t.z;
+		
+        return matrix;
+	}
 }
