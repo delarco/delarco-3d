@@ -63,6 +63,17 @@ export class MatrixUtils {
         );
     }
 
+    public static multiplyMatrix(m1: Matrix4x4, m2: Matrix4x4) {
+		
+        const mat = MatrixUtils.newMatrix4x4();
+
+		for (let c = 0; c < 4; c++)
+			for (let r = 0; r < 4; r++)
+            mat[r][c] = m1[r][0] * m2[0][c] + m1[r][1] * m2[1][c] + m1[r][2] * m2[2][c] + m1[r][3] * m2[3][c];
+            
+		return mat;
+	}
+
     public static rotationXMatrix(angle: number): Matrix4x4 {
 
         const rotMat = MatrixUtils.newMatrix4x4();
