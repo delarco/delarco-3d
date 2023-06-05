@@ -96,43 +96,33 @@ export class Game {
 
             const rotXMatrix = MatrixUtils.rotationXMatrix(mesh.roation.x);
             const rotZMatrix = MatrixUtils.rotationZMatrix(mesh.roation.z);
+            const translationMatrix = MatrixUtils.translationMatrix(mesh.translation);
 
-            const rotatedZTriangle = MatrixUtils.multiplyTriangle(triangle, rotZMatrix);
-            const rotatedTriangle = MatrixUtils.multiplyTriangle(rotatedZTriangle, rotXMatrix);
+            let worldMatrix = MatrixUtils.newIdentityMatrix4x4();
+            worldMatrix = MatrixUtils.multiplyMatrix(worldMatrix, rotZMatrix);
+            worldMatrix = MatrixUtils.multiplyMatrix(worldMatrix, rotXMatrix);
+            worldMatrix = MatrixUtils.multiplyMatrix(worldMatrix, translationMatrix);
 
-            // Translate
-            for (let point of rotatedTriangle.points) {
+            const transformedTriangle = MatrixUtils.multiplyTriangle(triangle, worldMatrix);
+            const normal = TriangleUtils.calcNormal(transformedTriangle);
+            const cameraRay = VectorUtils.sub(transformedTriangle.p1, this.camera.position);
 
-                point.x += mesh.translation.x;
-                point.y += mesh.translation.y;
-                point.z += mesh.translation.z;
-            }
-
-            // Calculate normal
-            const normal = TriangleUtils.calcNormal(rotatedTriangle);
-
-            const dotProduct = VectorUtils.dotProduct(normal, new Vec3D(
-                rotatedTriangle.p1.x - this.camera.position.x,
-                rotatedTriangle.p1.y - this.camera.position.y,
-                rotatedTriangle.p1.z - this.camera.position.z,
-            ));
-
-            if (dotProduct < 0) {
+            if (VectorUtils.dotProduct(normal, cameraRay) < 0.0) {
 
                 // ambient light
-                const length = VectorUtils.vectorLength(this.scene.ambientLight);
-
-                const lightDirection = new Vec3D(
-                    this.scene.ambientLight.x / length,
-                    this.scene.ambientLight.y / length,
-                    this.scene.ambientLight.z / length,
-                );
-
-                const shade = VectorUtils.dotProduct(normal, lightDirection);
-                rotatedTriangle.color.shade(shade);
+                const lightDirection = VectorUtils.normalise(this.scene.ambientLight);
+                const shade = Math.max(0.1, VectorUtils.dotProduct(normal, lightDirection));
+                transformedTriangle.color.shade(shade);
 
                 // Convert 3D to 2D
-                const projectedTriangle = MatrixUtils.multiplyTriangle(rotatedTriangle, this.projectionMatrix);
+                const projectedTriangle = MatrixUtils.multiplyTriangle(transformedTriangle, this.projectionMatrix);
+
+                for(let point of projectedTriangle.points) {
+
+                    point.x /= point.w;
+                    point.y /= point.w;
+                    point.z /= point.w;
+                }
 
                 // Scale to screen size
                 for (let point of projectedTriangle.points) {
@@ -157,7 +147,7 @@ export class Game {
 
     private drawTriangles(): void {
 
-        for(let triangle of this.trianglesToRaster.sort(this.triangleSortFunction)) {
+        for (let triangle of this.trianglesToRaster.sort(this.triangleSortFunction)) {
 
             CanvasUtils.drawTriangle(this.context!, triangle);
         }

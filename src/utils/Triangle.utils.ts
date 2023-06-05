@@ -30,18 +30,7 @@ export class TriangleUtils {
             triangle.p3.z - triangle.p1.z,
         );
 
-        const normal = new Vec3D(
-            line1.y * line2.z - line1.z * line2.y,
-            line1.z * line2.x - line1.x * line2.z,
-            line1.x * line2.y - line1.y * line2.x
-        );
-
-        // Normalise
-        const length = VectorUtils.vectorLength(normal);
-        normal.x /= length;
-        normal.y /= length;
-        normal.z /= length;
-
-        return normal;
+        const normal = VectorUtils.crossProduct(line1, line2);
+        return VectorUtils.normalise(normal);
     }
 }
