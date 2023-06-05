@@ -15,6 +15,16 @@ export class MatrixUtils {
         ]
     }
 
+    public static newIdentityMatrix4x4(): Matrix4x4 {
+
+        return [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
+        ]
+    }
+
     public static createProjectionMatrix(camera: Camera): Matrix4x4 {
 
         const projectionMat = MatrixUtils.newMatrix4x4();
