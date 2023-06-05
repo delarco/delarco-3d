@@ -7,8 +7,9 @@ export class TestScene extends Scene {
     public async preload(): Promise<void> {
 
         const lamp = await WavefrontObjLoader.loadFile('/models/lamp.obj');
+        const teapot = await WavefrontObjLoader.loadFile('/models/teapot.obj');
 
-        if (lamp) this.meshes.push(lamp);
+        if (teapot) this.meshes.push(teapot);
 
         this.meshes.push(new CubeGeometry(1))
     }
