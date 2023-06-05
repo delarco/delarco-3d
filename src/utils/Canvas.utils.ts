@@ -13,10 +13,10 @@ export class CanvasUtils {
 
         context.strokeStyle = color?.RGB || triangle.color.RGB;
         context.beginPath();
-        context.moveTo(triangle.p1.x, triangle.p1.y);
-        context.lineTo(triangle.p2.x, triangle.p2.y);
-        context.lineTo(triangle.p3.x, triangle.p3.y);
-        context.lineTo(triangle.p1.x, triangle.p1.y);
+        context.moveTo(triangle.p1.x, context.canvas.height - triangle.p1.y);
+        context.lineTo(triangle.p2.x, context.canvas.height - triangle.p2.y);
+        context.lineTo(triangle.p3.x, context.canvas.height - triangle.p3.y);
+        context.lineTo(triangle.p1.x, context.canvas.height - triangle.p1.y);
         context.stroke();
         context.closePath();
     }
@@ -25,9 +25,9 @@ export class CanvasUtils {
 
         context.fillStyle = color?.RGB || triangle.color.RGB;
         context.beginPath();
-        context.moveTo(triangle.points[0].x, triangle.points[0].y);
-        context.lineTo(triangle.points[1].x, triangle.points[1].y);
-        context.lineTo(triangle.points[2].x, triangle.points[2].y);
+        context.moveTo(triangle.p1.x, context.canvas.height - triangle.p1.y);
+        context.lineTo(triangle.p2.x, context.canvas.height - triangle.p2.y);
+        context.lineTo(triangle.p3.x, context.canvas.height - triangle.p3.y);
         context.fill();
         context.closePath();
     }
