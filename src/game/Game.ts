@@ -35,7 +35,8 @@ export class Game {
 
     private keyboard: Keyboard;
 
-    private lookDir = new Vec3D(0, 0, 1);
+    private lookDir = new Vec3D(0, 0, 0);
+    private yaw = 0;
 
     constructor(config: GameConfig = new GameConfig()) {
 
@@ -120,8 +121,12 @@ export class Game {
                 transformedTriangle.color.shade(shade);
 
                 const up = new Vec3D(0, 1, 0);
-                const target = VectorUtils.add(this.camera.position, this.lookDir);
+                let target = new Vec3D(0, 0, 1);
+                const cameraRotMatrix = MatrixUtils.rotationYMatrix(this.yaw);
+                this.lookDir = MatrixUtils.multiplyVector(target, cameraRotMatrix);
+                target = VectorUtils.add(this.camera.position, this.lookDir);
                 const cameraMatrix = MatrixUtils.pointAt(this.camera.position, target, up);
+
                 const viewMatrix = MatrixUtils.quickInverse(cameraMatrix);
 
                 // Convert world space to view space
@@ -193,6 +198,14 @@ export class Game {
 
         if (this.keyboard.key(KEYS.KEY_S)) {
             this.camera.position = VectorUtils.sub(this.camera.position, forward);
+        }
+
+        if (this.keyboard.key(KEYS.KEY_A)) {
+            this.yaw += 2 * deltaTime;
+        }
+
+        if (this.keyboard.key(KEYS.KEY_D)) {
+            this.yaw -= 2 * deltaTime;
         }
     }
 }
