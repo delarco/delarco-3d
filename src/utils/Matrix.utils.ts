@@ -2,6 +2,7 @@ import { Camera } from "../core/Camera";
 import { Matrix4x4 } from "../core/Matrix4x4";
 import { Triangle } from "../core/Triangle";
 import { Vec3D } from "../core/Vect3D";
+import { VectorUtils } from "./Vector.utils";
 
 export class MatrixUtils {
 
@@ -121,6 +122,44 @@ export class MatrixUtils {
         matrix[3][0] = t.x;
         matrix[3][1] = t.y;
         matrix[3][2] = t.z;
+
+        return matrix;
+    }
+
+    public static pointAt(pos: Vec3D, target: Vec3D, up: Vec3D): Matrix4x4 {
+
+        const newForward = VectorUtils.normalise(
+            VectorUtils.sub(target, pos)
+        );
+
+        const a = VectorUtils.mul(
+            newForward,
+            VectorUtils.dotProduct(up, newForward)
+        );
+        const newUp = VectorUtils.normalise(VectorUtils.sub(up, a));
+
+        const newRight = VectorUtils.crossProduct(newUp, newForward);
+
+        const matrix = MatrixUtils.newMatrix4x4();
+        matrix[0][0] = newRight.x; matrix[0][1] = newRight.y; matrix[0][2] = newRight.z; matrix[0][3] = 0.0;
+        matrix[1][0] = newUp.x; matrix[1][1] = newUp.y; matrix[1][2] = newUp.z; matrix[1][3] = 0.0;
+        matrix[2][0] = newForward.x; matrix[2][1] = newForward.y; matrix[2][2] = newForward.z; matrix[2][3] = 0.0;
+        matrix[3][0] = pos.x; matrix[3][1] = pos.y; matrix[3][2] = pos.z;
+
+        return matrix;
+    }
+
+    public static quickInverse(m: Matrix4x4): Matrix4x4 {
+
+        const matrix = MatrixUtils.newMatrix4x4();
+        
+        matrix[0][0] = m[0][0]; matrix[0][1] = m[1][0]; matrix[0][2] = m[2][0]; matrix[0][3] = 0.0;
+        matrix[1][0] = m[0][1]; matrix[1][1] = m[1][1]; matrix[1][2] = m[2][1]; matrix[1][3] = 0.0;
+        matrix[2][0] = m[0][2]; matrix[2][1] = m[1][2]; matrix[2][2] = m[2][2]; matrix[2][3] = 0.0;
+        matrix[3][0] = -(m[3][0] * matrix[0][0] + m[3][1] * matrix[1][0] + m[3][2] * matrix[2][0]);
+        matrix[3][1] = -(m[3][0] * matrix[0][1] + m[3][1] * matrix[1][1] + m[3][2] * matrix[2][1]);
+        matrix[3][2] = -(m[3][0] * matrix[0][2] + m[3][1] * matrix[1][2] + m[3][2] * matrix[2][2]);
+        matrix[3][3] = 1.0;
 
         return matrix;
     }
