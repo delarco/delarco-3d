@@ -32,19 +32,11 @@ export class MatrixUtils {
     public static multiplyVector(v: Vec3D, m: Matrix4x4): Vec3D {
 
         const retVec = new Vec3D(
-            v.x * m[0][0] + v.y * m[1][0] + v.z * m[2][0] + m[3][0],
-            v.x * m[0][1] + v.y * m[1][1] + v.z * m[2][1] + m[3][1],
-            v.x * m[0][2] + v.y * m[1][2] + v.z * m[2][2] + m[3][2]
+            v.x * m[0][0] + v.y * m[1][0] + v.z * m[2][0] + v.w * m[3][0],
+            v.x * m[0][1] + v.y * m[1][1] + v.z * m[2][1] + v.w * m[3][1],
+            v.x * m[0][2] + v.y * m[1][2] + v.z * m[2][2] + v.w * m[3][2],
+            v.x * m[0][3] + v.y * m[1][3] + v.z * m[2][3] + v.w * m[3][3]
         );
-
-        const w = v.x * m[0][3] + v.y * m[1][3] + v.z * m[2][3] + m[3][3];
-
-        if (w != 0) {
-
-            retVec.x = retVec.x / w;
-            retVec.y = retVec.y / w;
-            retVec.z = retVec.z / w;
-        }
 
         return retVec;
     }
@@ -73,6 +65,19 @@ export class MatrixUtils {
 
         return rotMat;
     }
+
+    public static rotationYMatrix(angle: number): Matrix4x4 {
+
+        const rotMat = MatrixUtils.newMatrix4x4();
+		rotMat[0][0] = Math.cos(angle);
+		rotMat[0][2] = Math.sin(angle);
+		rotMat[2][0] = -Math.sin(angle);
+		rotMat[1][1] = 1.0;
+		rotMat[2][2] = Math.cos(angle);
+		rotMat[3][3] = 1.0;
+
+		return rotMat;
+	}
 
     public static rotationZMatrix(angle: number): Matrix4x4 {
 
