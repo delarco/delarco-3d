@@ -4,6 +4,7 @@ import { Matrix4x4 } from "../core/Matrix4x4";
 import { Mesh } from "../core/Mesh";
 import { Triangle } from "../core/Triangle";
 import { Vec3D } from "../core/Vect3D";
+import { Keyboard, KEYS } from "../input/Keyboard";
 import { Scene } from "../scene/Scene";
 import { CanvasUtils } from "../utils/Canvas.utils";
 import { Clock } from "../utils/Clock";
@@ -32,7 +33,9 @@ export class Game {
 
     private trianglesToRaster = new Array<Triangle>();
 
-    private _firstFrame = true;
+    private keyboard: Keyboard;
+
+    private lookDir = new Vec3D(0, 0, 1);
 
     constructor(config: GameConfig = new GameConfig()) {
 
@@ -54,6 +57,8 @@ export class Game {
         CanvasUtils.clear(this.context!, this.backgroundColor);
 
         this.projectionMatrix = MatrixUtils.createProjectionMatrix(config.camera);
+
+        this.keyboard = new Keyboard();
     }
 
     public async run(): Promise<void> {
@@ -73,7 +78,9 @@ export class Game {
             CanvasUtils.clear(this.context!, this.backgroundColor);
             this.trianglesToRaster = [];
 
+            this.updateCamera(deltaTime);
             this.scene.update(currentTime, deltaTime);
+
 
             for (let mesh of this.scene.meshes) {
 
@@ -81,8 +88,6 @@ export class Game {
             }
 
             this.drawTriangles();
-
-            this._firstFrame = false;
 
             requestAnimationFrame(mainLoop);
         };
@@ -111,13 +116,21 @@ export class Game {
 
                 // ambient light
                 const lightDirection = VectorUtils.normalise(this.scene.ambientLight);
-                const shade = Math.max(0.1, VectorUtils.dotProduct(normal, lightDirection));
+                const shade = Math.max(0.5, VectorUtils.dotProduct(normal, lightDirection));
                 transformedTriangle.color.shade(shade);
 
-                // Convert 3D to 2D
-                const projectedTriangle = MatrixUtils.multiplyTriangle(transformedTriangle, this.projectionMatrix);
+                const up = new Vec3D(0, 1, 0);
+                const target = VectorUtils.add(this.camera.position, this.lookDir);
+                const cameraMatrix = MatrixUtils.pointAt(this.camera.position, target, up);
+                const viewMatrix = MatrixUtils.quickInverse(cameraMatrix);
 
-                for(let point of projectedTriangle.points) {
+                // Convert world space to view space
+                const viewedTriangle = MatrixUtils.multiplyTriangle(transformedTriangle, viewMatrix);
+
+                // Convert 3D to 2D
+                const projectedTriangle = MatrixUtils.multiplyTriangle(viewedTriangle, this.projectionMatrix);
+
+                for (let point of projectedTriangle.points) {
 
                     point.x /= point.w;
                     point.y /= point.w;
@@ -133,6 +146,7 @@ export class Game {
                     point.y *= 0.5 * this.config.resolution.height;
                 }
 
+                //console.log(triangle.color, projectedTriangle.color);
                 this.trianglesToRaster.push(projectedTriangle);
             }
         }
@@ -150,6 +164,35 @@ export class Game {
         for (let triangle of this.trianglesToRaster.sort(this.triangleSortFunction)) {
 
             CanvasUtils.drawTriangle(this.context!, triangle);
+        }
+    }
+
+    private updateCamera(deltaTime: number): void {
+
+        if (this.keyboard.key(KEYS.ARROW_UP)) {
+            this.camera.position.y += 8 * deltaTime;
+        }
+
+        if (this.keyboard.key(KEYS.ARROW_DOWN)) {
+            this.camera.position.y -= 8 * deltaTime;
+        }
+
+        if (this.keyboard.key(KEYS.ARROW_LEFT)) {
+            this.camera.position.x -= 8 * deltaTime;
+        }
+
+        if (this.keyboard.key(KEYS.ARROW_RIGHT)) {
+            this.camera.position.x += 8 * deltaTime;
+        }
+
+        const forward = VectorUtils.mul(this.lookDir, 8 * deltaTime)
+
+        if (this.keyboard.key(KEYS.KEY_W)) {
+            this.camera.position = VectorUtils.add(this.camera.position, forward);
+        }
+
+        if (this.keyboard.key(KEYS.KEY_S)) {
+            this.camera.position = VectorUtils.sub(this.camera.position, forward);
         }
     }
 }
