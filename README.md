@@ -2,6 +2,10 @@
 
 ## What we have so far
 
+Update #6
+
+![A rotated cube](public/screenshots/ss06.png)
+
 Update #5
 
 ![Lamp obj model](public/screenshots/ss05.png)
