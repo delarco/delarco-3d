@@ -10,7 +10,7 @@ export class CanvasImageData {
         private size: Size,
         private colorBuffer: Uint8ClampedArray,
         private depthBuffer: Array<number>
-    ){}
+    ) { }
 
     public clear(color: Color): void {
 
@@ -32,6 +32,8 @@ export class CanvasImageData {
 
     public drawPixel(x: number, y: number, color: Color): void {
 
+        if (x < 0 || y < 0 || x >= this.size.width || y > this.size.height) return;
+
         const index = 4 * ((this.size.height - y - 1) * this.size.width + x);
         this.colorBuffer[index + 0] = color.r;
         this.colorBuffer[index + 1] = color.g;
@@ -52,7 +54,7 @@ export class CanvasImageData {
             const x = Math.floor(v1.x + xInc * step);
             const y = Math.floor(v1.y + yInc * step);
 
-            if(x < 0 || y < 0 || x >= this.size.width || y >= this.size.height) return;
+            if (x < 0 || y < 0 || x >= this.size.width || y >= this.size.height) return;
 
             this.drawPixel(x, y, color);
         }
@@ -67,9 +69,9 @@ export class CanvasImageData {
 
     public drawTexture(texture: Texture, x: number, y: number): void {
 
-        for(let ty = 0; ty < texture.height; ty++) {
+        for (let ty = 0; ty < texture.height; ty++) {
 
-            for(let tx = 0; tx < texture.width; tx++) {
+            for (let tx = 0; tx < texture.width; tx++) {
 
                 this.drawPixel(x + tx, y + ty, texture.getPixelColor(tx, ty));
             }
