@@ -176,7 +176,7 @@ export class Game {
                         projectedTriangle.p1.x, projectedTriangle.p1.y, projectedTriangle.t1.u, projectedTriangle.t1.v, projectedTriangle.t1.w,
                         projectedTriangle.p2.x, projectedTriangle.p2.y, projectedTriangle.t2.u, projectedTriangle.t2.v, projectedTriangle.t2.w,
                         projectedTriangle.p3.x, projectedTriangle.p3.y, projectedTriangle.t3.u, projectedTriangle.t3.v, projectedTriangle.t3.w,
-                        mesh.texture
+                        mesh.texture, projectedTriangle.color
                     );
 
                     //this.renderer.drawTriangleWireFrame(projectedTriangle, Color.BLACK);
@@ -189,7 +189,8 @@ export class Game {
         x1: number, y1: number, u1: number, v1: number, w1: number,
         x2: number, y2: number, u2: number, v2: number, w2: number,
         x3: number, y3: number, u3: number, v3: number, w3: number,
-        tex: Texture, defaultColor = Color.RED): void {
+        tex: Texture | null, defaultColor: Color): void {
+        //console.log(defaultColor);
 
         x1 = Math.floor(x1);
         x2 = Math.floor(x2);
