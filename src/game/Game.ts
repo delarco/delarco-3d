@@ -10,7 +10,6 @@ import { CanvasImageData } from "../renderer/CanvasImageData";
 import { Scene } from "../scene/Scene";
 import { Clock } from "../utils/Clock";
 import { MatrixUtils } from "../utils/Matrix.utils";
-import { TextureUtils } from "../utils/Texture.utils";
 import { TriangleUtils } from "../utils/Triangle.utils";
 import { VectorUtils } from "../utils/Vector.utils";
 import { GameConfig } from "./GameConfig";
@@ -40,8 +39,6 @@ export class Game {
 
     private lookDir = new Vec3D(0, 0, 0);
     private yaw = 0;
-
-    private texture: Texture;
 
     private renderer: CanvasImageData;
 
@@ -74,8 +71,6 @@ export class Game {
         this.projectionMatrix = MatrixUtils.createProjectionMatrix(config.camera);
 
         this.keyboard = new Keyboard();
-
-        this.texture = TextureUtils.makeTestTexture('test', 32, 32);
     }
 
     public async run(): Promise<void> {
@@ -181,28 +176,27 @@ export class Game {
                         projectedTriangle.p1.x, projectedTriangle.p1.y, projectedTriangle.t1.u, projectedTriangle.t1.v, projectedTriangle.t1.w,
                         projectedTriangle.p2.x, projectedTriangle.p2.y, projectedTriangle.t2.u, projectedTriangle.t2.v, projectedTriangle.t2.w,
                         projectedTriangle.p3.x, projectedTriangle.p3.y, projectedTriangle.t3.u, projectedTriangle.t3.v, projectedTriangle.t3.w,
-                        this.texture
+                        mesh.texture
                     );
-        
-                    this.renderer.drawTriangleWireFrame(projectedTriangle, Color.BLACK);
 
+                    //this.renderer.drawTriangleWireFrame(projectedTriangle, Color.BLACK);
                 }
             }
         }
-    }   
+    }
 
     private drawTexturedTriangle(
         x1: number, y1: number, u1: number, v1: number, w1: number,
         x2: number, y2: number, u2: number, v2: number, w2: number,
         x3: number, y3: number, u3: number, v3: number, w3: number,
-        tex: Texture): void {
+        tex: Texture, defaultColor = Color.RED): void {
 
-            x1 = Math.floor(x1);
-            x2 = Math.floor(x2);
-            x3 = Math.floor(x3);
-            y1 = Math.floor(y1);
-            y2 = Math.floor(y2);
-            y3 = Math.floor(y3);
+        x1 = Math.floor(x1);
+        x2 = Math.floor(x2);
+        x3 = Math.floor(x3);
+        y1 = Math.floor(y1);
+        y2 = Math.floor(y2);
+        y3 = Math.floor(y3);
 
         if (y2 < y1) {
             [y1, y2] = [y2, y1];
@@ -291,7 +285,8 @@ export class Game {
 
                     if (tex_w > this.depthBuffer[i * this.config.resolution.width + j]) {
 
-                        const color = tex.sampleColor(tex_u / tex_w, tex_v / tex_w);
+                        let color = defaultColor;
+                        if (tex) color = tex.sampleColor(tex_u / tex_w, tex_v / tex_w);
                         this.renderer.drawPixel(j, i, color);
                         this.depthBuffer[i * this.config.resolution.width + j] = tex_w;
                     }
@@ -349,8 +344,9 @@ export class Game {
                     tex_w = (1.0 - t) * tex_sw + t * tex_ew;
 
                     if (tex_w > this.depthBuffer[i * this.config.resolution.width + j]) {
- 
-                        const color = tex.sampleColor(tex_u / tex_w, tex_v / tex_w);
+
+                        let color = defaultColor;
+                        if (tex) color = tex.sampleColor(tex_u / tex_w, tex_v / tex_w);
                         this.renderer.drawPixel(j, i, color);
                         this.depthBuffer[i * this.config.resolution.width + j] = tex_w;
                     }
