@@ -8,6 +8,10 @@ export class Triangle {
     public get p2() { return this.points[1]; }
     public get p3() { return this.points[2]; }
 
+    public get t1() { return this.tex[0]; }
+    public get t2() { return this.tex[1]; }
+    public get t3() { return this.tex[2]; }
+
     constructor(
         public points: Array<Vec3D> = new Array<Vec3D>(
             new Vec3D(), new Vec3D(), new Vec3D()
