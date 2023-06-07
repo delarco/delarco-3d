@@ -48,12 +48,15 @@ export class Game {
         this.canvas.height = config.resolution.height;
         this.canvas.style.width = config.viewPort.width + 'px';
         this.canvas.style.height = config.viewPort.height + 'px';
+        this.canvas.style.imageRendering = 'crisp-edges'; // 'pixelated';
 
         this.context = this.canvas.getContext("2d");
 
         if (!this.context) {
             throw new Error("Can't get context");
         }
+
+        this.context.imageSmoothingEnabled = false;
 
         CanvasUtils.clear(this.context!, this.backgroundColor);
 
