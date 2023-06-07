@@ -11,7 +11,7 @@ export class TextureUtils {
 
     public static makeTestTexture(name: string, width: number, height: number): Texture {
 
-        const texture = new Texture(name, width, height, new Array<Color>());
+        const texture = new Texture(name, width, height);        
 
         for (let y = 0; y < height; y++) {
 
@@ -37,7 +37,7 @@ export class TextureUtils {
                     || (x == 1 && y == 2)
                 ) color = Color.BLACK;
 
-                texture.data.push(color);
+                texture.data[y * width + x] = color;
             }
         }
 
