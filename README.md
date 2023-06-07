@@ -2,6 +2,10 @@
 
 ## What we have so far
 
+Update #7
+
+![Mountains](public/screenshots/ss07.png)
+
 Update #6
 
 ![A rotated cube](public/screenshots/ss06.png)
