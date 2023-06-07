@@ -120,7 +120,7 @@ export class Game {
 
                 // ambient light
                 const lightDirection = VectorUtils.normalise(this.scene.ambientLight);
-                const shade = Math.max(0.5, VectorUtils.dotProduct(normal, lightDirection));
+                const shade = Math.max(0.3, VectorUtils.dotProduct(normal, lightDirection));
                 transformedTriangle.color.shade(shade);
 
                 const up = new Vec3D(0, 1, 0);
