@@ -25,7 +25,7 @@ export class CanvasImageData {
                 this.colorBuffer[index + 3] = color.a;
 
                 const depthIndex = (y * this.size.width + x);
-                this.depthBuffer[depthIndex] = 1000.0;
+                this.depthBuffer[depthIndex] = 0.0;
             }
         }
     }
