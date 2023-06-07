@@ -4,6 +4,7 @@ import { Matrix4x4 } from "../core/Matrix4x4";
 import { Mesh } from "../core/Mesh";
 import { Texture } from "../core/Texture";
 import { Triangle } from "../core/Triangle";
+import { IUserInterface } from "../core/UserInterface";
 import { Vec3D } from "../core/Vect3D";
 import { Keyboard, KEYS } from "../input/Keyboard";
 import { CanvasImageData } from "../renderer/CanvasImageData";
@@ -42,9 +43,12 @@ export class Game {
 
     private renderer: CanvasImageData;
 
-    constructor(config: GameConfig = new GameConfig()) {
+    private userInterface: IUserInterface | null;
+
+    constructor(config: GameConfig = new GameConfig(), userInterface: IUserInterface | null = null) {
 
         this.config = config;
+        this.userInterface = userInterface;
         this.camera = config.camera;
 
         this.canvas = document.createElement("canvas");
@@ -85,7 +89,11 @@ export class Game {
             this.previousTime = currentTimeInSecs;
 
             this.clock.tick();
-            this.clock.setFpsToTitle();
+            
+            if(this.userInterface?.fpsElement) {
+
+                this.userInterface.fpsElement.innerText = this.clock.fps.toString();
+            }
 
             this.renderer.clear(this.backgroundColor);
 
@@ -179,7 +187,10 @@ export class Game {
                         mesh.texture, projectedTriangle.color
                     );
 
-                    //this.renderer.drawTriangleWireFrame(projectedTriangle, Color.BLACK);
+                    if(this.userInterface?.wireframe){
+
+                        this.renderer.drawTriangleWireFrame(projectedTriangle, Color.BLACK);
+                    }
                 }
             }
         }
@@ -190,7 +201,6 @@ export class Game {
         x2: number, y2: number, u2: number, v2: number, w2: number,
         x3: number, y3: number, u3: number, v3: number, w3: number,
         tex: Texture | null, defaultColor: Color): void {
-        //console.log(defaultColor);
 
         x1 = Math.floor(x1);
         x2 = Math.floor(x2);

@@ -10,9 +10,24 @@
   <title>delarco-3d</title>
 </head>
 <body>
-  <nav>delarco 3d - test scene</nav>
+  <nav>
+    <h1>delarco 3d - test scene</h1>
+  </nav>
   <div id="app">
-    <div id="controls"></div>
+    <div id="controls">
+      <p>
+        <b>FPS:</b>
+        <span id="fps"></span>
+      </p>
+      <p>
+        <input id="wireframe" type="checkbox">
+        <label for="wireframe"><b>Wireframe</b></label>
+      </p>
+      <p>
+        <b>Texture</b>
+        <ul class="textures"></ul>
+      </p>
+    </div>
     <div id="scene"></div>
   </div>
   <script type="module" src="/src/main.ts"></script>
