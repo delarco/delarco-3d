@@ -1,5 +1,6 @@
 import { Color } from "../core/Color";
 import { Size } from "../core/Size";
+import { Texture } from "../core/Texture";
 import { Triangle } from "../core/Triangle";
 import { Vec3D } from "../core/Vect3D";
 
@@ -31,7 +32,7 @@ export class CanvasImageData {
 
     public drawPixel(x: number, y: number, color: Color): void {
 
-        const index = 4 * (y * this.size.width + x);
+        const index = 4 * ((this.size.height - y) * this.size.width + x);
         this.colorBuffer[index + 0] = color.r;
         this.colorBuffer[index + 1] = color.g;
         this.colorBuffer[index + 2] = color.b;
@@ -62,5 +63,16 @@ export class CanvasImageData {
         this.drawLine(triangle.p1, triangle.p2, color || triangle.color);
         this.drawLine(triangle.p2, triangle.p3, color || triangle.color);
         this.drawLine(triangle.p3, triangle.p1, color || triangle.color);
+    }
+
+    public drawTexture(texture: Texture, x: number, y: number): void {
+
+        for(let ty = 0; ty < texture.height; ty++) {
+
+            for(let tx = 0; tx < texture.width; tx++) {
+
+                this.drawPixel(x + tx, y + ty, texture.getPixelColor(tx, ty));
+            }
+        }
     }
 }
