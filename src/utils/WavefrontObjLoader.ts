@@ -30,8 +30,10 @@ export class WavefrontObjLoader {
 
         for (let line of data.split('\n')) {
 
+            line = line.replace('\n', '');
+            line = line.replace('\r', '');
             while (line.indexOf('  ') >= 0) line = line.replace('  ', ' ');
-
+            
             const lineData = line.split(' ');
 
             if (lineData[0] == 'v') {
@@ -74,7 +76,7 @@ export class WavefrontObjLoader {
                 face.push(mapF(lineData[1].split('/')));
                 face.push(mapF(lineData[2].split('/')));
                 face.push(mapF(lineData[3].split('/')));
-                if (lineData.length == 5) face.push(mapF(lineData[4].split('/')));
+                if (lineData.length >= 5) face.push(mapF(lineData[4].split('/')));
 
                 faces.push(face);
             }
