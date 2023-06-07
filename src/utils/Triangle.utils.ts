@@ -14,9 +14,9 @@ export class TriangleUtils {
                 new Vec3D(triangle.p3.x, triangle.p3.y, triangle.p3.z),
             ],
             [
-                new Vec2D(triangle.t1.u, triangle.t1.v, triangle.p1.w),
-                new Vec2D(triangle.t2.u, triangle.t2.v, triangle.p2.w),
-                new Vec2D(triangle.t3.u, triangle.t3.v, triangle.p3.w),
+                new Vec2D(triangle.t1.u, triangle.t1.v, triangle.t1.w),
+                new Vec2D(triangle.t2.u, triangle.t2.v, triangle.t2.w),
+                new Vec2D(triangle.t3.u, triangle.t3.v, triangle.t3.w),
             ],
             triangle.color
         );
