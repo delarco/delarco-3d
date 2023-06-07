@@ -132,27 +132,41 @@ export class Game {
                 // Convert world space to view space
                 const viewedTriangle = MatrixUtils.multiplyTriangle(transformedTriangle, viewMatrix);
 
-                // Convert 3D to 2D
-                const projectedTriangle = MatrixUtils.multiplyTriangle(viewedTriangle, this.projectionMatrix);
+                let clippedTriangles = 0;
+                let clipped = new Array<Triangle>(new Triangle(), new Triangle());
 
-                for (let point of projectedTriangle.points) {
+                clippedTriangles = VectorUtils.triangleClipAgainstPlane(
+                    new Vec3D(0.0, 0.0, 0.1),
+                    new Vec3D(0.0, 0.0, 1.0),
+                    viewedTriangle,
+                    clipped[0],
+                    clipped[1]
+                );
 
-                    point.x /= point.w;
-                    point.y /= point.w;
-                    point.z /= point.w;
+                for (let n = 0; n < clippedTriangles; n++) {
+
+                    // Convert 3D to 2D
+                    const projectedTriangle = MatrixUtils.multiplyTriangle(clipped[n], this.projectionMatrix);
+
+                    for (let point of projectedTriangle.points) {
+
+                        point.x /= point.w;
+                        point.y /= point.w;
+                        point.z /= point.w;
+                    }
+
+                    // Scale to screen size
+                    for (let point of projectedTriangle.points) {
+
+                        point.x += 1.0;
+                        point.y += 1.0;
+                        point.x *= 0.5 * this.config.resolution.width;
+                        point.y *= 0.5 * this.config.resolution.height;
+                    }
+
+                    //console.log(triangle.color, projectedTriangle.color);
+                    this.trianglesToRaster.push(projectedTriangle);
                 }
-
-                // Scale to screen size
-                for (let point of projectedTriangle.points) {
-
-                    point.x += 1.0;
-                    point.y += 1.0;
-                    point.x *= 0.5 * this.config.resolution.width;
-                    point.y *= 0.5 * this.config.resolution.height;
-                }
-
-                //console.log(triangle.color, projectedTriangle.color);
-                this.trianglesToRaster.push(projectedTriangle);
             }
         }
     }
@@ -165,6 +179,8 @@ export class Game {
     }
 
     private drawTriangles(): void {
+
+        // TODO: clip other planes
 
         for (let triangle of this.trianglesToRaster.sort(this.triangleSortFunction)) {
 
