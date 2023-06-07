@@ -2,13 +2,15 @@ import { Camera } from "../core/Camera";
 import { Color } from "../core/Color";
 import { Matrix4x4 } from "../core/Matrix4x4";
 import { Mesh } from "../core/Mesh";
+import { Texture } from "../core/Texture";
 import { Triangle } from "../core/Triangle";
 import { Vec3D } from "../core/Vect3D";
 import { Keyboard, KEYS } from "../input/Keyboard";
+import { CanvasImageData } from "../renderer/CanvasImageData";
 import { Scene } from "../scene/Scene";
-import { CanvasUtils } from "../utils/Canvas.utils";
 import { Clock } from "../utils/Clock";
 import { MatrixUtils } from "../utils/Matrix.utils";
+import { TextureUtils } from "../utils/Texture.utils";
 import { TriangleUtils } from "../utils/Triangle.utils";
 import { VectorUtils } from "../utils/Vector.utils";
 import { GameConfig } from "./GameConfig";
@@ -17,6 +19,9 @@ export class Game {
 
     private config: GameConfig;
     private canvas: HTMLCanvasElement;
+    private imageData: ImageData;
+    private colorBuffer: Uint8ClampedArray;
+    private depthBuffer: Array<number>;
     private context: CanvasRenderingContext2D | null;
     private clock = new Clock();
     private camera: Camera;
@@ -38,6 +43,10 @@ export class Game {
     private lookDir = new Vec3D(0, 0, 0);
     private yaw = 0;
 
+    private texture: Texture;
+
+    private renderer: CanvasImageData;
+
     constructor(config: GameConfig = new GameConfig()) {
 
         this.config = config;
@@ -58,11 +67,17 @@ export class Game {
 
         this.context.imageSmoothingEnabled = false;
 
-        CanvasUtils.clear(this.context!, this.backgroundColor);
+        this.imageData = this.context.getImageData(0, 0, config.resolution.width, config.resolution.height);
+        this.colorBuffer = this.imageData.data;
+        this.depthBuffer = new Array<number>(config.resolution.width * config.resolution.height);
+        this.renderer = new CanvasImageData(config.resolution, this.colorBuffer, this.depthBuffer);
+        this.renderer.clear(this.backgroundColor);
 
         this.projectionMatrix = MatrixUtils.createProjectionMatrix(config.camera);
 
         this.keyboard = new Keyboard();
+
+        this.texture = TextureUtils.makeTestTexture('test', 32, 32);
     }
 
     public async run(): Promise<void> {
@@ -79,12 +94,11 @@ export class Game {
             this.clock.tick();
             this.clock.setFpsToTitle();
 
-            CanvasUtils.clear(this.context!, this.backgroundColor);
+            this.renderer.clear(this.backgroundColor);
             this.trianglesToRaster = [];
 
             this.updateCamera(deltaTime);
             this.scene.update(currentTime, deltaTime);
-
 
             for (let mesh of this.scene.meshes) {
 
@@ -92,7 +106,9 @@ export class Game {
             }
 
             this.drawTriangles();
+            this.renderer.drawTexture(this.texture, 0, 0);
 
+            this.context?.putImageData(this.imageData, 0, 0);
             requestAnimationFrame(mainLoop);
         };
 
@@ -187,7 +203,7 @@ export class Game {
 
         for (let triangle of this.trianglesToRaster.sort(this.triangleSortFunction)) {
 
-            CanvasUtils.drawTriangle(this.context!, triangle);
+            this.renderer.drawTriangleWireFrame(triangle);
         }
     }
 
