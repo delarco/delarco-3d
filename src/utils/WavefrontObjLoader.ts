@@ -1,10 +1,12 @@
+import { Color } from "../core/Color";
 import { Mesh } from "../core/Mesh";
 import { Triangle } from "../core/Triangle";
+import { Vec2D } from "../core/Vect2D";
 import { Vec3D } from "../core/Vect3D";
 
 export class WavefrontObjLoader {
 
-    public static async loadFile(filename: string): Promise<Mesh | null> {
+    public static async loadFile(filename: string, defaultColor = Color.RED): Promise<Mesh | null> {
 
         const data = await fetch(filename)
         .then(res => res.text())
@@ -55,7 +57,9 @@ export class WavefrontObjLoader {
                 points[face[0]],
                 points[face[1]],
                 points[face[2]]
-            ]
+            ], [
+                new Vec2D(), new Vec2D(), new Vec2D(),
+            ], defaultColor
             ));
 
             if (face.length == 4) {
@@ -64,7 +68,9 @@ export class WavefrontObjLoader {
                     points[face[2]],
                     points[face[3]],
                     points[face[0]]
-                ]
+                ], [
+                    new Vec2D(), new Vec2D(), new Vec2D(),
+                ], defaultColor
                 ))
             }
         }
