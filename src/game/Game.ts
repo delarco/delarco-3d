@@ -36,8 +36,6 @@ export class Game {
 
     private previousTime = 0;
 
-    private trianglesToRaster = new Array<Triangle>();
-
     private keyboard: Keyboard;
 
     private lookDir = new Vec3D(0, 0, 0);
@@ -95,7 +93,6 @@ export class Game {
             this.clock.setFpsToTitle();
 
             this.renderer.clear(this.backgroundColor);
-            this.trianglesToRaster = [];
 
             this.updateCamera(deltaTime);
             this.scene.update(currentTime, deltaTime);
@@ -104,9 +101,6 @@ export class Game {
 
                 this.drawMesh(mesh);
             }
-
-            this.drawTriangles();
-            this.renderer.drawTexture(this.texture, 0, 0);
 
             this.context?.putImageData(this.imageData, 0, 0);
             requestAnimationFrame(mainLoop);
@@ -183,36 +177,19 @@ export class Game {
                         point.y *= 0.5 * this.config.resolution.height;
                     }
 
-                    //console.log(triangle.color, projectedTriangle.color);
-                    this.trianglesToRaster.push(projectedTriangle);
+                    this.drawTexturedTriangle(
+                        projectedTriangle.p1.x, projectedTriangle.p1.y, projectedTriangle.t1.u, projectedTriangle.t1.v, projectedTriangle.t1.w,
+                        projectedTriangle.p2.x, projectedTriangle.p2.y, projectedTriangle.t2.u, projectedTriangle.t2.v, projectedTriangle.t2.w,
+                        projectedTriangle.p3.x, projectedTriangle.p3.y, projectedTriangle.t3.u, projectedTriangle.t3.v, projectedTriangle.t3.w,
+                        this.texture
+                    );
+        
+                    this.renderer.drawTriangleWireFrame(projectedTriangle, Color.BLACK);
+
                 }
             }
         }
-    }
-
-    private triangleSortFunction(t1: Triangle, t2: Triangle): number {
-
-        const z1 = (t1.p1.z + t1.p2.z + t1.p3.z) / 3.0;
-        const z2 = (t2.p1.z + t2.p2.z + t2.p3.z) / 3.0;
-        return z2 < z1 ? -1 : z2 > z1 ? 1 : 0;
-    }
-
-    private drawTriangles(): void {
-
-        // TODO: clip other planes
-
-        for (let t of this.trianglesToRaster.sort(this.triangleSortFunction)) {
-
-            this.drawTexturedTriangle(
-                t.p1.x, t.p1.y, t.t1.u, t.t1.v, t.t1.w,
-                t.p2.x, t.p2.y, t.t2.u, t.t2.v, t.t2.w,
-                t.p3.x, t.p3.y, t.t3.u, t.t3.v, t.t3.w,
-                this.texture
-            );
-
-            this.renderer.drawTriangleWireFrame(t, Color.BLACK);
-        }
-    }
+    }   
 
     private drawTexturedTriangle(
         x1: number, y1: number, u1: number, v1: number, w1: number,
