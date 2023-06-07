@@ -43,4 +43,85 @@ export class TextureUtils {
 
         return texture;
     }
+
+    public static async loadTexture(filename: string, debugBorders: boolean = false): Promise<Texture> {
+
+        return new Promise(
+            (resolve, reject) => {
+
+                fetch(filename)
+                    .then(async result => {
+
+                        const fileExt = filename.split('.').pop()?.toUpperCase();
+
+                        let texture: Texture | null = null;
+
+                        switch (fileExt) {
+
+                            case 'JPG':
+                            case 'PNG':
+
+                                const bitmap = await createImageBitmap(await result.blob());
+
+                                const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+                                const context = canvas.getContext('2d')!;
+                                context.drawImage(bitmap, 0, 0);
+                                var imageData = context.getImageData(0, 0, bitmap.width, bitmap.height);
+
+                                texture = new Texture(filename, imageData.width, imageData.height);
+                                texture.data = [];
+
+                                const colorBytes = imageData.data.length / (imageData.width * imageData.height);
+
+                                if (colorBytes != 4) {
+                                    throw new Error('Not 4-byte color');
+                                }
+
+                                for (let index = 0; index < imageData.data.length; index += 4) {
+
+                                    //console.log(imageData.data[index + 0]);
+                                    
+
+                                    texture.data.push(new Color(
+                                        imageData.data[index + 0],
+                                        imageData.data[index + 1],
+                                        imageData.data[index + 2],
+                                        imageData.data[index + 3]
+                                    ));
+                                }
+
+                                break;
+                        }
+
+                        if (texture && debugBorders) {
+
+                            for (let x = 0; x < texture.width; x++) {
+
+                                texture.drawPixel(x, 0, Color.BLACK);
+                                texture.drawPixel(x, texture.height - 1, Color.BLACK);
+                            }
+
+                            for (let y = 0; y < texture.height; y++) {
+
+                                texture.drawPixel(0, y, Color.BLACK);
+                                texture.drawPixel(texture.width - 1, y, Color.BLACK);
+                            }
+
+                            texture.drawPixel(1, 1, Color.RED);
+                            texture.drawPixel(texture.width - 2, texture.height - 2, Color.GREEN);
+                        }
+
+                        if (texture) {
+                            return resolve(texture);
+                        }
+
+                        throw new Error();
+                    })
+                    .catch(() => {
+                        alert(`Error loading texture: ${filename}.`);
+                        reject();
+                    });
+            }
+        );
+    }
 }
