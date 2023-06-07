@@ -3,6 +3,12 @@ import { Texture } from "../core/Texture";
 
 export class TextureUtils {
 
+    public static make(name: string, width: number, height: number, color: Color): Texture {
+
+        const data = [...new Array(32 * 32).keys()].map(() => color);
+        return new Texture(name, width, height, data);
+    }
+
     public static makeTestTexture(name: string, width: number, height: number): Texture {
 
         const texture = new Texture(name, width, height, new Array<Color>());
