@@ -32,7 +32,7 @@ export class CanvasImageData {
 
     public drawPixel(x: number, y: number, color: Color): void {
 
-        const index = 4 * ((this.size.height - y) * this.size.width + x);
+        const index = 4 * ((this.size.height - y - 1) * this.size.width + x);
         this.colorBuffer[index + 0] = color.r;
         this.colorBuffer[index + 1] = color.g;
         this.colorBuffer[index + 2] = color.b;
