@@ -73,7 +73,6 @@ export class VectorUtils {
             let n = VectorUtils.normalise(p);
 			return (plane_n.x * p.x + plane_n.y * p.y + plane_n.z * p.z - VectorUtils.dotProduct(plane_n, plane_p));
         };
-		
 
 		// Create two temporary storage arrays to classify points either side of plane
 		// If distance sign is positive, point lies on "inside" of plane
@@ -81,7 +80,6 @@ export class VectorUtils {
 		let outside_points = [new Vec3D(), new Vec3D(), new Vec3D()]; let nOutsidePointCount = 0;
 		let inside_tex = [new Vec2D(), new Vec2D(), new Vec2D()]; let nInsideTexCount = 0;
 		let outside_tex = [new Vec2D(), new Vec2D(), new Vec2D()]; let nOutsideTexCount = 0;
-
 
 		// Get signed distance of each point in triangle to plane
 		let d0 = dist(in_tri.p1);
@@ -128,7 +126,18 @@ export class VectorUtils {
 		{
 			// All points lie on the inside of plane, so do nothing
 			// and allow the triangle to simply pass through
-			out_tri1 = in_tri;
+			for(let n = 0; n < 3; n++) {
+				out_tri1.points[n].x = in_tri.points[n].x;
+				out_tri1.points[n].y = in_tri.points[n].y;
+				out_tri1.points[n].z = in_tri.points[n].z;
+				out_tri1.points[n].w = in_tri.points[n].w;
+
+				out_tri1.tex[n].u = in_tri.tex[n].u;
+				out_tri1.tex[n].v = in_tri.tex[n].v;
+				out_tri1.tex[n].w = in_tri.tex[n].w;
+
+				out_tri1.color = in_tri.color;
+			}
 
 			return 1; // Just the one returned original triangle is valid
 		}
