@@ -17,14 +17,18 @@ export class CubeGeometry extends Mesh {
                 new Vec3D(0, size, 0),
                 new Vec3D(size, size, 0)
             ], [
-                new Vec2D(), new Vec2D(), new Vec2D(),
+                new Vec2D(0.0, 1.0, 1.0),
+                new Vec2D(0.0, 0.0, 1.0),
+                new Vec2D(1.0, 0.0, 1.0),
             ], Color.GREEN),
             new Triangle([
                 new Vec3D(0, 0, 0),
                 new Vec3D(size, size, 0),
                 new Vec3D(size, 0, 0)
             ], [
-                new Vec2D(), new Vec2D(), new Vec2D(),
+                new Vec2D(0.0, 1.0, 1.0),
+                new Vec2D(1.0, 0.0, 1.0),
+                new Vec2D(1.0, 1.0, 1.0),
             ], Color.GREEN),
 
             // EAST
@@ -33,14 +37,18 @@ export class CubeGeometry extends Mesh {
                 new Vec3D(size, size, 0),
                 new Vec3D(size, size, size)
             ], [
-                new Vec2D(), new Vec2D(), new Vec2D(),
+                new Vec2D(0.0, 1.0, 1.0),
+                new Vec2D(0.0, 0.0, 1.0),
+                new Vec2D(1.0, 0.0, 1.0),
             ], Color.BLUE),
             new Triangle([
                 new Vec3D(size, 0, 0),
                 new Vec3D(size, size, size),
                 new Vec3D(size, 0, size)
             ], [
-                new Vec2D(), new Vec2D(), new Vec2D(),
+                new Vec2D(0.0, 1.0, 1.0),
+                new Vec2D(1.0, 0.0, 1.0),
+                new Vec2D(1.0, 1.0, 1.0),
             ], Color.BLUE),
 
             // NORTH
@@ -49,14 +57,18 @@ export class CubeGeometry extends Mesh {
                 new Vec3D(size, size, size),
                 new Vec3D(0, size, size)
             ], [
-                new Vec2D(), new Vec2D(), new Vec2D(),
+                new Vec2D(0.0, 1.0, 1.0),
+                new Vec2D(0.0, 0.0, 1.0),
+                new Vec2D(1.0, 0.0, 1.0),
             ], Color.RED),
             new Triangle([
                 new Vec3D(size, 0, size),
                 new Vec3D(0, size, size),
                 new Vec3D(0, 0, size)
             ], [
-                new Vec2D(), new Vec2D(), new Vec2D(),
+                new Vec2D(0.0, 1.0, 1.0),
+                new Vec2D(1.0, 0.0, 1.0),
+                new Vec2D(1.0, 1.0, 1.0),
             ], Color.RED),
 
             // WEST
@@ -65,14 +77,18 @@ export class CubeGeometry extends Mesh {
                 new Vec3D(0, size, size),
                 new Vec3D(0, size, 0)
             ], [
-                new Vec2D(), new Vec2D(), new Vec2D(),
+                new Vec2D(0.0, 1.0, 1.0),
+                new Vec2D(0.0, 0.0, 1.0),
+                new Vec2D(1.0, 0.0, 1.0),
             ], Color.ORANGE),
             new Triangle([
                 new Vec3D(0, 0, size),
                 new Vec3D(0, size, 0),
                 new Vec3D(0, 0, 0)
             ], [
-                new Vec2D(), new Vec2D(), new Vec2D(),
+                new Vec2D(0.0, 1.0, 1.0),
+                new Vec2D(1.0, 0.0, 1.0),
+                new Vec2D(1.0, 1.0, 1.0),
             ], Color.ORANGE),
 
             // TOP
@@ -81,14 +97,18 @@ export class CubeGeometry extends Mesh {
                 new Vec3D(0, size, size),
                 new Vec3D(size, size, size)
             ], [
-                new Vec2D(), new Vec2D(), new Vec2D(),
+                new Vec2D(0.0, 1.0, 1.0),
+                new Vec2D(0.0, 0.0, 1.0),
+                new Vec2D(1.0, 0.0, 1.0),
             ], Color.YELLOW),
             new Triangle([
                 new Vec3D(0, size, 0),
                 new Vec3D(size, size, size),
                 new Vec3D(size, size, 0)
             ], [
-                new Vec2D(), new Vec2D(), new Vec2D(),
+                new Vec2D(0.0, 1.0, 1.0),
+                new Vec2D(1.0, 0.0, 1.0),
+                new Vec2D(1.0, 1.0, 1.0),
             ], Color.YELLOW),
 
             // BOTTOM
@@ -97,14 +117,18 @@ export class CubeGeometry extends Mesh {
                 new Vec3D(0, 0, size),
                 new Vec3D(0, 0, 0)
             ], [
-                new Vec2D(), new Vec2D(), new Vec2D(),
+                new Vec2D(0.0, 1.0, 1.0),
+                new Vec2D(0.0, 0.0, 1.0),
+                new Vec2D(1.0, 0.0, 1.0),
             ], Color.BLACK),
             new Triangle([
                 new Vec3D(size, 0, size),
                 new Vec3D(0, 0, 0),
                 new Vec3D(size, 0, 0)
             ], [
-                new Vec2D(), new Vec2D(), new Vec2D(),
+                new Vec2D(0.0, 1.0, 1.0),
+                new Vec2D(1.0, 0.0, 1.0),
+                new Vec2D(1.0, 1.0, 1.0),
             ], Color.BLACK),
         ];
 
