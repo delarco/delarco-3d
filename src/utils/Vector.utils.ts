@@ -70,7 +70,7 @@ export class VectorUtils {
 		// Return signed shortest distance from point to plane, plane normal must be normalised
         const dist = (p: Vec3D): number => {
 
-            let n = VectorUtils.normalise(p);
+            //let n = VectorUtils.normalise(p);
 			return (plane_n.x * p.x + plane_n.y * p.y + plane_n.z * p.z - VectorUtils.dotProduct(plane_n, plane_p));
         };
 

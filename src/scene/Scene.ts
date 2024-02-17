@@ -23,6 +23,6 @@ export class Scene {
     }
 
     public update(time: number, deltaTime: number): void {
-
+        time; deltaTime;
     }
 }

@@ -28,7 +28,7 @@ export class TestScene extends Scene {
     }
 
     public update(time: number, deltaTime: number): void {
-
+        time;
         this.meshes[0].roation.x += 1 * deltaTime;
         this.meshes[0].roation.z += 1 * deltaTime;
     }
